@@ -12,10 +12,27 @@ services:
          - "11311:11311"
     command: roscore
     
-    
+# ROS workspace 
+
+  ros_workspace:
+    build: 
+      context: ./SocialTech
+      dockerfile: Dockerfile
+    container_name: ros_workspace
+    hostname: ros_workspace
+    networks: 
+         - rosdocker
+    volumes:
+      - ./catkin_ws:/root/catkin_ws
+    environment:
+      - "XAUTHORITY=/tmp/.docker.xauth"
+      - "ROS_HOSTNAME=ros_workspace"
+      - "ROS_MASTER_URI=http://rosmaster:11311"
+    command: /bin/bash
+
+       
+
 # ROS RVIZ
-
-
   rviz:
     # build: ros-rviz/.
     image: osrf/ros:noetic-desktop-full
