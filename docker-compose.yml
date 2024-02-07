@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+
+  # ROS MASTER (ROSCORE)
+  rosmaster:
+    image: osrf/ros:noetic-desktop-full
+    container_name: rosmaster
+    hostname: rosmaster
+    networks: 
+         - rosdocker
+    ports:
+         - "11311:11311"
+    command: roscore
+    
+    
+# ROS RVIZ
+
+
+  rviz:
+    # build: ros-rviz/.
+    image: osrf/ros:noetic-desktop-full
+    container_name: rviz
+    hostname: rviz
+    networks: 
+         - rosdocker
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+    environment:
+        - "DISPLAY=$DISPLAY"
+        - "QT_X11_NO_MITSHM=1"
+        - "XAUTHORITY=/tmp/.docker.xauth"
+        - "ROS_HOSTNAME=rviz"
+        - "ROS_MASTER_URI=http://rosmaster:11311"
+    devices:
+        - "/dev/snd:/dev/snd"
+        - "/dev/dri:/dev/dri"
+    command: rosrun rviz rviz
+
+
+    
+networks:
+  rosdocker:
